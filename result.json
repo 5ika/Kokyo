@@ -1,0 +1,60 @@
+{
+  headers: Headers {
+    authorization: "Bearer eyJvcmciOiI2NDA2NTFhNTIyZmEwNTAwMDEyOWJiZTEiLCJpZCI6IjlhOTM4NDZkNTIxZjRhNmI4ZjNhZDgwNDFkODVhMzM5IiwiaCI6Im11cm11cjEyOCJ9",
+    "content-type": "application/xml"
+  },
+  method: "POST",
+  body: '<OJP xmlns="http://www.vdv.de/ojp" xmlns:siri="http://www.siri.org.uk/siri" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vdv.de/ojp ../../../../Downloads/OJP-changes_for_v1.1%20(1)/OJP-changes_for_v1.1/OJP.xsd">\n' +
+    "  <OJPRequest>\n" +
+    "      <siri:ServiceRequest>\n" +
+    "          <siri:RequestTimestamp>2024-08-08T14:33:29.455Z</siri:RequestTimestamp>\n" +
+    "          <siri:RequestorRef>Caroster.io</siri:RequestorRef>\n" +
+    "          <OJPLocationInformationRequest>\n" +
+    "              <siri:RequestTimestamp>2024-08-08T14:33:29.455Z</siri:RequestTimestamp>\n" +
+    "              <siri:MessageIdentifier>1220</siri:MessageIdentifier>\n" +
+    "              <InitialInput>\n" +
+    "                  <Name>Verbant</Name>\n" +
+    "              </InitialInput>\n" +
+    "              <Restrictions>\n" +
+    "                  <Type>stop</Type>\n" +
+    "                  <NumberOfResults>10</NumberOfResults>\n" +
+    "              </Restrictions>\n" +
+    "          </OJPLocationInformationRequest>\n" +
+    "      </siri:ServiceRequest>\n" +
+    "  </OJPRequest>\n" +
+    "</OJP>"
+}
+[
+    {
+        "name": "Plan-les-Ouates, Verbant",
+        "stopRef": "8595038",
+        "geoPosition": {
+            "latitude": "46.15728",
+            "longitude": "6.12567"
+        }
+    },
+    {
+        "name": "Porto Ronco, Crodolo Verbano",
+        "stopRef": "8505451",
+        "geoPosition": {
+            "latitude": "46.1331",
+            "longitude": "8.71899"
+        }
+    },
+    {
+        "name": "Minusio, Via Verbano",
+        "stopRef": "8580987",
+        "geoPosition": {
+            "latitude": "46.1749",
+            "longitude": "8.81667"
+        }
+    },
+    {
+        "name": "Bern, Kaufmännischer Verband",
+        "stopRef": "8590009",
+        "geoPosition": {
+            "latitude": "46.94569",
+            "longitude": "7.42747"
+        }
+    }
+]

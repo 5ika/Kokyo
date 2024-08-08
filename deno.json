@@ -1,0 +1,13 @@
+{
+  "tasks": {
+    "cli": "deno run -A --env cli.ts"
+  },
+  "imports": {
+    "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.5",
+    "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0-rc.5",
+    "@cliffy/table": "jsr:@cliffy/table@^1.0.0-rc.5",
+    "@cliffy/ansi": "jsr:@cliffy/ansi@^1.0.0-rc.5",
+    "@libs/xml": "jsr:@libs/xml@^5.4.13",
+    "@std/datetime": "jsr:@std/datetime@^0.224.5"
+  }
+}
