@@ -13,6 +13,8 @@ export const getNextDepartures = async (
       "StopEventResult"
     ];
 
+  if (!stopEventResult) return [];
+
   return stopEventResult
     .map((stopEvent: any) => {
       const rawDatetime =
@@ -30,11 +32,21 @@ export const getNextDepartures = async (
         datetime = new Date(rawDatetime);
         departureIn = difference(datetime, new Date(), { units: ["minutes"] });
       }
+      const serviceType = get(
+        stopEvent,
+        "StopEvent.Service.ProductCategory.Name.Text.#text"
+      );
       return {
         from: get(stopEvent, "StopEvent.Service.OriginText.Text.#text"),
         to: get(stopEvent, "StopEvent.Service.DestinationText.Text.#text"),
         departure: datetime && format(datetime, "HH:mm"),
         departureIn: departureIn?.minutes,
+        serviceName: get(
+          stopEvent,
+          "StopEvent.Service.PublishedServiceName.Text.#text"
+        ),
+        serviceType,
+        serviceTypeIcon: getServiceTypeIcon(serviceType),
         stopName: get(
           stopEvent,
           "StopEvent.ThisCall.CallAtStop.StopPointName.Text.#text"
@@ -49,4 +61,14 @@ export const getNextDepartures = async (
       (eventA: StopEvent, eventB: StopEvent) =>
         eventA.departureIn - eventB.departureIn
     );
+};
+
+const getServiceTypeIcon = (serviceType: string) => {
+  const icon = {
+    Bus: "🚍",
+    Tram: "🚊",
+    Zug: "🚆",
+    Schiff: "🛥️",
+  }[serviceType];
+  return icon || serviceType;
 };

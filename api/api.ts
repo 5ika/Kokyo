@@ -67,7 +67,8 @@ export const getLocationInformationRequest = (textInput: string) =>
               </InitialInput>
               <Restrictions>
                   <Type>stop</Type>
-                  <NumberOfResults>5</NumberOfResults>
+                  <NumberOfResults>8</NumberOfResults>
+                  <TopographicPlaceRef>23009621:2</TopographicPlaceRef>
               </Restrictions>
           </OJPLocationInformationRequest>
       </siri:ServiceRequest>

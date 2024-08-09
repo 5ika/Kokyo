@@ -1,13 +1,20 @@
 {
   "tasks": {
-    "cli": "deno run -A --env cli.ts"
+    "cli": "deno run -A --env cli.ts",
+    "telegram": "deno run -A --watch --env bots/telegram.ts"
   },
   "imports": {
+    "@api/": "./api/",
+    "@cliffy/ansi": "jsr:@cliffy/ansi@^1.0.0-rc.5",
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.5",
     "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0-rc.5",
     "@cliffy/table": "jsr:@cliffy/table@^1.0.0-rc.5",
-    "@cliffy/ansi": "jsr:@cliffy/ansi@^1.0.0-rc.5",
+    "@gramio/format": "jsr:@gramio/format@^0.1.3",
+    "@gramio/keyboards": "jsr:@gramio/keyboards@^0.3.3",
+    "@gramio/wrappergram": "jsr:@gramio/wrappergram@^1.0.0",
+    "@lib/": "./lib/",
     "@libs/xml": "jsr:@libs/xml@^5.4.13",
-    "@std/datetime": "jsr:@std/datetime@^0.224.5"
+    "@std/datetime": "jsr:@std/datetime@^0.224.5",
+    "@std/log": "jsr:@std/log@^0.224.5"
   }
 }

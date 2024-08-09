@@ -5,6 +5,9 @@ interface StopEvent {
   departureIn?: number;
   stopName: string;
   quay: string;
+  serviceName: string;
+  serviceType: string;
+  serviceTypeIcon: string;
 }
 
 interface Place {

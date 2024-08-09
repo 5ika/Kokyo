@@ -28,12 +28,21 @@ await new Command()
     const tableRows = nextDepartures.map(item => [
       item.departure,
       `${item.departureIn} min`,
+      item.serviceName,
+      item.serviceType,
       item.to,
     ]);
     const table: Table = new Table()
-      .header(["Départ", "Dans", "Direction"].map(colors.bold.blue))
+      .header(
+        ["Départ", "Dans", "Ligne", "Type", "Direction"].map(colors.bold.blue)
+      )
       .body(tableRows)
-      .columns([{ minWidth: 10 }, { minWidth: 10 }]);
+      .columns([
+        { minWidth: 10 },
+        { minWidth: 10 },
+        { minWidth: 10 },
+        { minWidth: 10 },
+      ]);
     console.log("");
     table.render();
   })
