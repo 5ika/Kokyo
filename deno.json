@@ -1,7 +1,8 @@
 {
   "tasks": {
     "cli": "deno run -A --env cli.ts",
-    "telegram": "deno run -A --watch --env bots/telegram.ts"
+    "telegram-dev": "deno run -A --watch --env bots/telegram.ts",
+    "telegram": "deno run --allow-env --allow-net --env bots/telegram.ts"
   },
   "unstable": ["kv"],
   "imports": {
