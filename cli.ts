@@ -17,7 +17,7 @@ await new Command()
 
     const stopLists = await findStopByName(stopInput);
     const stopRef = await Select.prompt({
-      message: "Sélectionner le stop",
+      message: "Sélectionner l'arrêt",
       options: stopLists.map(item => ({
         name: item.name,
         value: item.stopRef,

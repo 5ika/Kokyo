@@ -1,7 +1,7 @@
 import { get } from "../lib/func.ts";
 import { getLocationInformationRequest } from "./api.ts";
 
-export const findStopByName = async (textInput: string): Promise<Place[]> => {
+export const findStopByName = async (textInput: string): Promise<Stop[]> => {
   const { result } = await getLocationInformationRequest(textInput);
   const placeResult = get<object[]>(
     result,

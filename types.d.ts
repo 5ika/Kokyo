@@ -10,10 +10,10 @@ interface StopEvent {
   serviceTypeIcon: string;
 }
 
-interface Place {
+interface Stop {
   name: string;
   stopRef: string;
-  geoPosition: {
+  geoPosition?: {
     latitude: number;
     longitude: number;
   };
