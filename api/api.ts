@@ -1,4 +1,5 @@
 import { parse } from "@libs/xml";
+import logger from "@lib/logger.ts";
 
 const TOKEN = Deno.env.get("API_TOKEN");
 const RequestorRef = "Caroster.io";
@@ -15,8 +16,14 @@ const apiFetch = async (
     body: query,
   });
   const xml = await response.text();
-  const result = parse(xml);
-  return { response, result };
+  try {
+    const result = parse(xml);
+    return { response, result };
+  } catch (error) {
+    logger.error(xml);
+    logger.error(error);
+    return { response, result: null };
+  }
 };
 
 // Doc: https://opentransportdata.swiss/fr/cookbook/stopeventservice/
@@ -53,7 +60,10 @@ export const getStopEventService = (
 </OJP>`);
 
 // Doc: https://opentransportdata.swiss/fr/cookbook/OJPLocationInformationRequest/
-export const getLocationInformationRequest = (textInput: string) =>
+export const getLocationInformationRequest = (
+  textInput?: string,
+  coordinates?: Coordinates
+) =>
   apiFetch(`<OJP xmlns="http://www.vdv.de/ojp" xmlns:siri="http://www.siri.org.uk/siri" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vdv.de/ojp ../../../../Downloads/OJP-changes_for_v1.1%20(1)/OJP-changes_for_v1.1/OJP.xsd">
   <OJPRequest>
       <siri:ServiceRequest>
@@ -63,7 +73,17 @@ export const getLocationInformationRequest = (textInput: string) =>
               <siri:RequestTimestamp>${new Date().toISOString()}</siri:RequestTimestamp>
               <siri:MessageIdentifier>1220</siri:MessageIdentifier>
               <InitialInput>
-                  <Name>${textInput}</Name>
+                  ${textInput ? "<Name>${textInput}</Name>" : ""}
+                  ${
+                    coordinates
+                      ? `
+                  <GeoPosition>
+                    <siri:Longitude>${coordinates.longitude}</siri:Longitude>
+                    <siri:Latitude>${coordinates.latitude}</siri:Latitude>
+                  </GeoPosition>
+                  `
+                      : ""
+                  }
               </InitialInput>
               <Restrictions>
                   <Type>stop</Type>

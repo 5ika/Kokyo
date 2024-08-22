@@ -18,3 +18,8 @@ interface Stop {
     longitude: number;
   };
 }
+
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+}

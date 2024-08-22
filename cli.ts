@@ -2,7 +2,7 @@ import { Command } from "@cliffy/command";
 import { Input, Select } from "@cliffy/prompt";
 import { colors } from "@cliffy/ansi/colors";
 import { Table } from "@cliffy/table";
-import { findStopByName } from "./api/locationInformationRequest.ts";
+import { findStops } from "./api/locationInformationRequest.ts";
 import { getNextDepartures } from "./api/stopEvent.ts";
 
 await new Command()
@@ -15,7 +15,7 @@ await new Command()
         message: "Nom de l'arrêt",
       });
 
-    const stopLists = await findStopByName(stopInput);
+    const stopLists = await findStops(stopInput);
     const stopRef = await Select.prompt({
       message: "Sélectionner l'arrêt",
       options: stopLists.map(item => ({

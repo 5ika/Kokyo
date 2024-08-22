@@ -1,5 +1,5 @@
 import { Telegram, getUpdates } from "@gramio/wrappergram";
-import { findStopByName } from "@api/locationInformationRequest.ts";
+import { findStops } from "@api/locationInformationRequest.ts";
 import { InlineKeyboard } from "@gramio/keyboards";
 import { getNextDepartures } from "@api/stopEvent.ts";
 import logger from "@lib/logger.ts";
@@ -35,9 +35,13 @@ for await (const update of getUpdates(telegram)) {
       continue;
     }
 
-    const { from, text } = update.message;
+    const { from, text, location } = update.message;
 
-    logger.info(`New message from ${getUsername(from)}: ${text}`);
+    logger.info(
+      `New message from ${getUsername(from)}: ${
+        text || JSON.stringify(location)
+      }`
+    );
 
     telegram.api.setMyCommands({
       commands: [
@@ -79,19 +83,27 @@ Ce bot est en cours de développement actif. Les fonctionnalités sont pour le m
         reply_markup: inlineKeyboard,
       });
     } else {
-      const stopLists = await findStopByName(text);
-      kvdb.saveStops(stopLists);
-      let keyboard = new InlineKeyboard();
-      for (const stop of stopLists)
-        keyboard = keyboard
-          .text(stop.name, { cmd: "nextDepartures", stopRef: stop.stopRef })
-          .row();
+      const searchInput = location ? location : text;
+      const stopLists = await findStops(searchInput);
+      if (!stopLists?.length) {
+        await sendMessage({
+          chat_id: from.id,
+          text: "Désolé, je n'ai pas réussi à récupérer une liste d'arrêts correspondants.",
+        });
+      } else {
+        kvdb.saveStops(stopLists);
+        let keyboard = new InlineKeyboard();
+        for (const stop of stopLists)
+          keyboard = keyboard
+            .text(stop.name, { cmd: "nextDepartures", stopRef: stop.stopRef })
+            .row();
 
-      await sendMessage({
-        chat_id: from.id,
-        text: "Quel arrêt correspond ?",
-        reply_markup: keyboard,
-      });
+        await sendMessage({
+          chat_id: from.id,
+          text: "Quel arrêt correspond ?",
+          reply_markup: keyboard,
+        });
+      }
     }
   }
 
