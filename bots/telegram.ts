@@ -56,7 +56,7 @@ for await (const update of getUpdates(telegram)) {
     if (text === "/aide" || text === "/start") {
       const inlineKeyboard = new InlineKeyboard().url(
         "Plus d'infos",
-        "https://5ika.ch/posts/un-bot-pour-les-transports-en-commun/"
+        "https://5ika.ch/kokyo/"
       );
       await sendMessage({
         chat_id: from.id,
