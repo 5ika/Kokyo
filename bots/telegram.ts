@@ -54,12 +54,20 @@ for await (const update of getUpdates(telegram)) {
     });
 
     if (text === "/aide" || text === "/start") {
-      sendMessage({
+      const inlineKeyboard = new InlineKeyboard().url(
+        "Plus d'infos",
+        "https://5ika.ch/posts/un-bot-pour-les-transports-en-commun/"
+      );
+      await sendMessage({
         chat_id: from.id,
-        text: `Hey ! Je suis un bot qui te permet d'obtenir rapidement des informations sur les transports en commun dans toute la Suisse.
+        reply_markup: inlineKeyboard,
+        text: `Hey ✋ !
+Je suis un bot qui te permet d'obtenir rapidement des informations sur les transports en commun dans toute la Suisse 🇨🇭
 Entre le nom d'un arrêt et laisse-toi guider !
 
-Ce bot est en cours de développement actif. Les fonctionnalités sont pour le moment limitées.
+📍 Tu peux aussi envoyer ta position GPS et je liste les arrêts à proximité.
+
+🧑‍💻 Ce bot est en cours de développement actif. Il se peut qu'il y ait encore quelques instabilités.
 
 /aide - Affiche ce message
 /favoris - Affiche vos favoris`,
@@ -83,6 +91,10 @@ Ce bot est en cours de développement actif. Les fonctionnalités sont pour le m
         reply_markup: inlineKeyboard,
       });
     } else {
+      telegram.api.sendChatAction({
+        chat_id: from.id,
+        action: "find_location",
+      });
       const searchInput = location ? location : text;
       const stopLists = await findStops(searchInput);
       if (!stopLists?.length) {
@@ -116,6 +128,10 @@ Ce bot est en cours de développement actif. Les fonctionnalités sont pour le m
     logger.info(`New request from ${getUsername(from)}: ${data}`);
 
     if (payload?.cmd === "nextDepartures") {
+      telegram.api.sendChatAction({
+        chat_id: from.id,
+        action: "find_location",
+      });
       const nextDepartures = await getNextDepartures(payload.stopRef);
       const stop = await kvdb.getStopByRef(payload.stopRef);
       const text = formatContent(`Prochains départs depuis *${
@@ -128,17 +144,23 @@ ${nextDepartures
   )
   .join("\n")}`);
 
-      let keyboard = new InlineKeyboard().text("Rafraîchir", {
-        cmd: "nextDepartures",
-        stopRef: payload.stopRef,
-        refresh: message.message_id,
-      });
+      let keyboard = new InlineKeyboard()
+        .text("Rafraîchir", {
+          cmd: "nextDepartures",
+          stopRef: payload.stopRef,
+          refresh: message.message_id,
+        })
+        .text("Localiser", {
+          cmd: "localizeStop",
+          stopRef: payload.stopRef,
+        });
+
       const existingFavorite = await kvdb.getUserFavorite(
         userId,
         payload.stopRef
       );
       if (!existingFavorite?.value)
-        keyboard = keyboard.text("Enregistrer comme favoris", {
+        keyboard = keyboard.row().text("Enregistrer comme favoris", {
           cmd: "saveFavorite",
           stopRef: payload.stopRef,
         });
@@ -149,6 +171,19 @@ ${nextDepartures
         text,
         reply_markup: keyboard,
       });
+    } else if (payload?.cmd === "localizeStop") {
+      const stop = await kvdb.getStopByRef(payload.stopRef);
+      if (stop.value?.geoPosition)
+        await telegram.api.sendLocation({
+          chat_id: from.id,
+          longitude: stop.value.geoPosition.longitude,
+          latitude: stop.value.geoPosition.latitude,
+        });
+      else
+        sendMessage({
+          chat_id: from.id,
+          text: "Pas de coordonnées associées à cet arrêt.",
+        });
     } else if (payload?.cmd === "saveFavorite") {
       const stop = await kvdb.getStopByRef(payload.stopRef);
       if (stop?.value) await kvdb.saveUserFavorite(userId, stop.value);
